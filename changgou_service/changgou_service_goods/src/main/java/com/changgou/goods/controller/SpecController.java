@@ -103,5 +103,10 @@ public class SpecController {
         return new Result(true,StatusCode.OK,"查询成功",pageResult);
     }
 
+    @GetMapping("/category/{categoryName}")
+    public Result<List<Map>> findSpecListByCategoryName(@PathVariable String categoryName) {
+        List<Map> specListByCategoryName = specService.findSpecListByCategoryName(categoryName);
+        return new Result<>(true, StatusCode.OK, "查询成功", specListByCategoryName);
+    }
 
 }

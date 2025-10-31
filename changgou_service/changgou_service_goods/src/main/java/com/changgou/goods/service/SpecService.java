@@ -2,6 +2,7 @@ package com.changgou.goods.service;
 
 import com.changgou.goods.pojo.Spec;
 import com.github.pagehelper.Page;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,11 @@ public interface SpecService {
      */
     Page<Spec> findPage(Map<String, Object> searchMap, int page, int size);
 
-
-
+    /**
+     * 根据分类名称查询规格列表
+     * @param categoryName
+     * @return
+     */
+    List<Map> findSpecListByCategoryName(@Param("categoryName") String categoryName);
 
 }

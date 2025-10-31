@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -139,4 +140,15 @@ public class SpecServiceImpl implements SpecService {
         return example;
     }
 
+    @Override
+    public List<Map> findSpecListByCategoryName(String categoryName) {
+        List<Map> specListByCategoryName = specMapper.findSpecListByCategoryName(categoryName);
+
+        for (Map map : specListByCategoryName) {
+            String[] options = ((String) map.get("options")).split(",");
+            map.put("options", options);
+        }
+
+        return specListByCategoryName;
+    }
 }

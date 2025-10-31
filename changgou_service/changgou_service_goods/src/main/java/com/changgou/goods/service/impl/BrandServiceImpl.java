@@ -1,8 +1,8 @@
 package com.changgou.goods.service.impl;
 
 import com.changgou.goods.dao.BrandMapper;
-import com.changgou.goods.service.BrandService;
 import com.changgou.goods.pojo.Brand;
+import com.changgou.goods.service.BrandService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ public class BrandServiceImpl implements BrandService {
 
     /**
      * 查询全部列表
+     *
      * @return
      */
     @Override
@@ -29,114 +30,127 @@ public class BrandServiceImpl implements BrandService {
 
     /**
      * 根据ID查询
+     *
      * @param id
      * @return
      */
     @Override
-    public Brand findById(Integer id){
-        return  brandMapper.selectByPrimaryKey(id);
+    public Brand findById(Integer id) {
+        return brandMapper.selectByPrimaryKey(id);
     }
 
 
     /**
      * 增加
+     *
      * @param brand
      */
     @Override
-    public void add(Brand brand){
+    public void add(Brand brand) {
         brandMapper.insert(brand);
     }
 
 
     /**
      * 修改
+     *
      * @param brand
      */
     @Override
-    public void update(Brand brand){
+    public void update(Brand brand) {
         brandMapper.updateByPrimaryKey(brand);
     }
 
     /**
      * 删除
+     *
      * @param id
      */
     @Override
-    public void delete(Integer id){
+    public void delete(Integer id) {
         brandMapper.deleteByPrimaryKey(id);
     }
 
 
     /**
      * 条件查询
+     *
      * @param searchMap
      * @return
      */
     @Override
-    public List<Brand> findList(Map<String, Object> searchMap){
+    public List<Brand> findList(Map<String, Object> searchMap) {
         Example example = createExample(searchMap);
         return brandMapper.selectByExample(example);
     }
 
     /**
      * 分页查询
+     *
      * @param page
      * @param size
      * @return
      */
     @Override
-    public Page<Brand> findPage(int page, int size){
-        PageHelper.startPage(page,size);
-        return (Page<Brand>)brandMapper.selectAll();
+    public Page<Brand> findPage(int page, int size) {
+        PageHelper.startPage(page, size);
+        return (Page<Brand>) brandMapper.selectAll();
     }
 
     /**
      * 条件+分页查询
+     *
      * @param searchMap 查询条件
-     * @param page 页码
-     * @param size 页大小
+     * @param page      页码
+     * @param size      页大小
      * @return 分页结果
      */
     @Override
-    public Page<Brand> findPage(Map<String,Object> searchMap, int page, int size){
-        PageHelper.startPage(page,size);
+    public Page<Brand> findPage(Map<String, Object> searchMap, int page, int size) {
+        PageHelper.startPage(page, size);
         Example example = createExample(searchMap);
-        return (Page<Brand>)brandMapper.selectByExample(example);
+        return (Page<Brand>) brandMapper.selectByExample(example);
     }
 
     /**
      * 构建查询对象
+     *
      * @param searchMap
      * @return
      */
-    private Example createExample(Map<String, Object> searchMap){
-        Example example=new Example(Brand.class);
+    private Example createExample(Map<String, Object> searchMap) {
+        Example example = new Example(Brand.class);
         Example.Criteria criteria = example.createCriteria();
-        if(searchMap!=null){
+        if (searchMap != null) {
             // 品牌名称
-            if(searchMap.get("name")!=null && !"".equals(searchMap.get("name"))){
-                criteria.andLike("name","%"+searchMap.get("name")+"%");
-           	}
+            if (searchMap.get("name") != null && !"".equals(searchMap.get("name"))) {
+                criteria.andLike("name", "%" + searchMap.get("name") + "%");
+            }
             // 品牌图片地址
-            if(searchMap.get("image")!=null && !"".equals(searchMap.get("image"))){
-                criteria.andLike("image","%"+searchMap.get("image")+"%");
-           	}
+            if (searchMap.get("image") != null && !"".equals(searchMap.get("image"))) {
+                criteria.andLike("image", "%" + searchMap.get("image") + "%");
+            }
             // 品牌的首字母
-            if(searchMap.get("letter")!=null && !"".equals(searchMap.get("letter"))){
-                criteria.andLike("letter","%"+searchMap.get("letter")+"%");
-           	}
+            if (searchMap.get("letter") != null && !"".equals(searchMap.get("letter"))) {
+                criteria.andLike("letter", "%" + searchMap.get("letter") + "%");
+            }
 
             // 品牌id
-            if(searchMap.get("id")!=null ){
-                criteria.andEqualTo("id",searchMap.get("id"));
+            if (searchMap.get("id") != null) {
+                criteria.andEqualTo("id", searchMap.get("id"));
             }
             // 排序
-            if(searchMap.get("seq")!=null ){
-                criteria.andEqualTo("seq",searchMap.get("seq"));
+            if (searchMap.get("seq") != null) {
+                criteria.andEqualTo("seq", searchMap.get("seq"));
             }
 
         }
         return example;
     }
 
+    @Override
+    public List<Brand> findBrandListByCategoryName(String categoryName) {
+        List<Brand> brandListByCategoryName = brandMapper.findBrandListByCategoryName(categoryName);
+        return brandListByCategoryName;
+    }
 }

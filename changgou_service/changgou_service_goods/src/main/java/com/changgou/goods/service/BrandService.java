@@ -2,6 +2,7 @@ package com.changgou.goods.service;
 
 import com.changgou.goods.pojo.Brand;
 import com.github.pagehelper.Page;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ public interface BrandService {
 
     /**
      * 根据ID查询
+     *
      * @param id
      * @return
      */
@@ -63,7 +65,13 @@ public interface BrandService {
      */
     Page<Brand> findPage(Map<String, Object> searchMap, int page, int size);
 
-
+    /**
+     * 根据分类名称查询品牌列表
+     *
+     * @param categoryName
+     * @return
+     */
+    List<Brand> findBrandListByCategoryName(@Param("categoryName") String categoryName);
 
 
 }

@@ -113,11 +113,11 @@ public class AdminController {
     public Result login(@RequestBody Admin admin){
         boolean result = adminService.login(admin);
         if (result){
-            //密码是正确的
-            //生成jwt令牌,返回到客户端
+            // 密码是正确的
+            // 生成jwt令牌,返回到客户端
             Map<String,String> info = new HashMap<>();
             info.put("username",admin.getLoginName());
-            //基于工具类生成jwt令牌
+            // 工具类生成jwt令牌
             String jwt = JwtUtil.createJWT(UUID.randomUUID().toString(), admin.getLoginName(), null);
             info.put("token",jwt);
             return new Result(true, StatusCode.OK,"登录成功",info);

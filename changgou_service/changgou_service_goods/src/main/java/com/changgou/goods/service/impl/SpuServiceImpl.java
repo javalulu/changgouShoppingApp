@@ -1,10 +1,7 @@
 package com.changgou.goods.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.changgou.goods.dao.BrandMapper;
-import com.changgou.goods.dao.CategoryMapper;
-import com.changgou.goods.dao.SkuMapper;
-import com.changgou.goods.dao.SpuMapper;
+import com.changgou.goods.dao.*;
 import com.changgou.goods.pojo.*;
 import com.changgou.goods.service.SpuService;
 import com.changgou.util.IdWorker;
@@ -37,6 +34,9 @@ public class SpuServiceImpl implements SpuService {
 
     @Autowired
     private SkuMapper skuMapper;
+
+    @Autowired
+    private CategoryBrandMapper categoryBrandMapper;
 
     /**
      * 查询全部列表
@@ -97,6 +97,19 @@ public class SpuServiceImpl implements SpuService {
         // 查询品牌对象
         Brand brand = brandMapper.selectByPrimaryKey(goods.getSpu().getBrandId());
 
+        // 设置品牌与分类的关联关系
+        // 查询关联表
+        CategoryBrand categoryBrand = new CategoryBrand();
+        categoryBrand.setBrandId(goods.getSpu().getBrandId());
+        categoryBrand.setCategoryId(goods.getSpu().getCategory3Id());
+
+        int count = categoryBrandMapper.selectCount(categoryBrand);
+
+        if (count == 0) {
+            // 品牌与分类还没有关联关系
+            categoryBrandMapper.insert(categoryBrand);
+        }
+
         // 获取sku集合
         List<Sku> skuList = goods.getSkuList();
         if (skuList != null) {
@@ -144,15 +157,51 @@ public class SpuServiceImpl implements SpuService {
         }
     }
 
+    /**
+     * 根据id查询spu与sku列表信息
+     * @param id
+     * @return
+     */
+    @Override
+    public Goods findGoodsById(String id) {
+        Goods goods = new Goods();
+
+        // 查询spu, 封装到goods中
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        goods.setSpu(spu);
+
+        // 查询sku集合, 封装到goods中
+        Example example = new Example(Sku.class);
+        Example.Criteria criteria = example.createCriteria();
+        // 根据spu进行sku列表进行查询
+        criteria.andEqualTo("spuId", id);
+        List<Sku> skuList = skuMapper.selectByExample(example);
+        goods.setSkuList(skuList);
+
+        return goods;
+    }
 
     /**
      * 修改
      *
-     * @param spu
+     * @param goods
      */
+    @Transactional
     @Override
-    public void update(Spu spu) {
+    public void update(Goods goods) {
+        // 修改spu
+        Spu spu = goods.getSpu();
         spuMapper.updateByPrimaryKey(spu);
+
+        // 修改sku
+        // 先删除, 再新增
+        Example example = new Example(Sku.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("spuId", spu.getId());
+        skuMapper.deleteByExample(example);
+
+        this.saveSkuList(goods);
+
     }
 
     /**

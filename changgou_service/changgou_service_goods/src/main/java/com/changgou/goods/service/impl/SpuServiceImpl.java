@@ -359,4 +359,44 @@ public class SpuServiceImpl implements SpuService {
         return example;
     }
 
+    @Transactional
+    @Override
+    public void audit(String id) {
+        // 查询spu对象
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (spu == null) {
+            throw new RuntimeException("当前商品不存在");
+        }
+        // 判断当前spu是否处于删除状态
+        if ("1".equals(spu.getIsDelete())) {
+            throw new RuntimeException("当前商品处于删除状态");
+        }
+
+        // 修改审核状态为1, 上下架状态为1
+        spu.setStatus("1");
+        spu.setIsMarketable("1");
+
+        // 执行修改操作
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
+
+    // 商品下架
+    @Override
+    @Transactional
+    public void pull(String id) {
+        // 查询spu对象
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+
+        if (spu == null) {
+            throw new RuntimeException("当前商品不存在");
+        }
+        // 判断当前商品是否处于删除状态
+        if ("1".equals(spu.getIsDelete())) {
+            throw new RuntimeException("当前商品处于删除状态");
+        }
+
+        // 修改上下架状态
+        spu.setIsMarketable("0");
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
 }

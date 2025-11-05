@@ -104,5 +104,16 @@ public class SpuController {
         return new Result(true,StatusCode.OK,"查询成功",pageResult);
     }
 
+    @PutMapping("/audit/{id}")
+    public Result audit(@PathVariable String id) {
+        spuService.audit(id);
+        return new Result(true, StatusCode.OK, "商品审核成功");
+    }
+
+    @PutMapping("/pull/{id}")
+    public Result pull(@PathVariable String id) {
+        spuService.pull(id);
+        return new Result(true, StatusCode.OK, "商品下架成功");
+    }
 
 }

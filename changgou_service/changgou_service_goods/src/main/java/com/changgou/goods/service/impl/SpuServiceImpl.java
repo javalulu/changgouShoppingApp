@@ -209,9 +209,20 @@ public class SpuServiceImpl implements SpuService {
      *
      * @param id
      */
+    @Transactional
     @Override
     public void delete(String id) {
-        spuMapper.deleteByPrimaryKey(id);
+        // 逻辑删除
+        // 查询spu
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        // 判断是否处于下架状态
+        if (!spu.getIsMarketable().equals("0")) {
+            throw new RuntimeException("商品必须处于下架状态才能删除");
+        }
+        // 修改is_delete字段和重置审核状态字段
+        spu.setIsDelete("1");
+        spu.setStatus("0");
+        spuMapper.updateByPrimaryKeySelective(spu);
     }
 
 

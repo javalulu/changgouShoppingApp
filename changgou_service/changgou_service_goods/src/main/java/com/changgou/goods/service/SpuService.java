@@ -77,4 +77,7 @@ public interface SpuService {
 
     // 还原商品
     void restore(String id);
+
+    // 物理删除商品
+    void realDelete(String id);
 }

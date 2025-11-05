@@ -74,4 +74,7 @@ public interface SpuService {
 
     // 商品上架
     void put(String id);
+
+    // 还原商品
+    void restore(String id);
 }

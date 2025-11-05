@@ -121,4 +121,10 @@ public class SpuController {
         spuService.put(id);
         return new Result(true, StatusCode.OK, "商品上架成功");
     }
+
+    @PutMapping("/retore/{id}")
+    public Result restore(@PathVariable String id) {
+        spuService.restore(id);
+        return new Result(true, StatusCode.OK, "商品还原成功");
+    }
 }

@@ -116,4 +116,10 @@ public class SpuController {
         return new Result(true, StatusCode.OK, "商品下架成功");
     }
 
+    @PutMapping("/put/{id}")
+    public Result put(@PathVariable String id) {
+        spuService.put(id);
+        return new Result(true, StatusCode.OK, "商品上架成功");
+    }
+
 }

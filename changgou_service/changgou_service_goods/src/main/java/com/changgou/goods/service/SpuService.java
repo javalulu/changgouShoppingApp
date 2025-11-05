@@ -66,9 +66,12 @@ public interface SpuService {
 
     Goods findGoodsById(String id);
 
-    // 商品审核并自动上架
+    // 商品审核
     void audit(String id);
 
     // 商品下架
     void pull(String id);
+
+    // 商品上架
+    void put(String id);
 }

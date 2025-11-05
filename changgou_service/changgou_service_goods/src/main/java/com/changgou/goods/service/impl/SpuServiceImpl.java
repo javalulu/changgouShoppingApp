@@ -399,4 +399,22 @@ public class SpuServiceImpl implements SpuService {
         spu.setIsMarketable("0");
         spuMapper.updateByPrimaryKeySelective(spu);
     }
+
+    // 商品上架
+    @Transactional
+    @Override
+    public void put(String id) {
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+
+        if (spu == null) {
+            throw new RuntimeException("当前商品不存在");
+        }
+
+        if (!"1".equals(spu.getStatus())) {
+            throw new RuntimeException("当前商品未审核");
+        }
+
+        spu.setIsMarketable("1");
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
 }

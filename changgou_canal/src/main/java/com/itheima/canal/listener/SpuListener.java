@@ -1,6 +1,7 @@
 package com.itheima.canal.listener;
 
 import com.alibaba.otter.canal.protocol.CanalEntry;
+import com.itheima.canal.config.RabbitMQConfig;
 import com.xpand.starter.canal.annotation.CanalEventListener;
 import com.xpand.starter.canal.annotation.ListenPoint;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -41,7 +42,7 @@ public class SpuListener {
 
         //is_marketable  由0改为1表示上架
         if("0".equals(oldMap.get("is_marketable")) && "1".equals(newMap.get("is_marketable")) ){
-            rabbitTemplate.convertAndSend("goods_update_exchange","",newMap.get("id")); //发送到mq商品上架交换器上
+            rabbitTemplate.convertAndSend(RabbitMQConfig.GOODS_UP_EXCHANGE,"",newMap.get("id")); //发送到mq商品上架交换器上
         }
     }
 }

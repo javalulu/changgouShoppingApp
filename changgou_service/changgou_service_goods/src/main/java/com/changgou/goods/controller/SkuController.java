@@ -7,6 +7,8 @@ import com.changgou.goods.pojo.Sku;
 import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @RestController
@@ -101,6 +103,22 @@ public class SkuController {
         Page<Sku> pageList = skuService.findPage(searchMap, page, size);
         PageResult pageResult=new PageResult(pageList.getTotal(),pageList.getResult());
         return new Result(true,StatusCode.OK,"查询成功",pageResult);
+    }
+
+    @GetMapping("/spu/{spuId}")
+    public List<Sku> findSkuListBySpuId(@PathVariable String spuId) {
+        Map<String, Object> searchMap = new HashMap<>();
+
+        // 如果不是"all", 则是查询某个特定的spuList
+        if (!"all".equals(spuId)) {
+            searchMap.put("spuId", spuId);
+        }
+
+        searchMap.put("status", "1");
+
+        List<Sku> skuList = skuService.findList(searchMap);
+
+        return skuList;
     }
 
 

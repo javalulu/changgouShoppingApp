@@ -7,16 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoodsUpListener {
-
+public class GoodDelListener {
     @Autowired
     private ESManagerService esManagerService;
 
-    @RabbitListener(queues = RabbitMQConfig.SEARCH_ADD_QUEUE)
-    public void receiveMessage(String spuId) {
-        System.out.println("商品上架队列接收到消息：" + spuId);
+    @RabbitListener(queues = RabbitMQConfig.SEARCH_DEL_QUEUE)
+    public void receiveMessage(String message) {
+        System.out.println("商品下架队列监听到的消息：" + message);
 
-        // 查询skuList, 并导入索引库
-        esManagerService.importDataBySpuId(spuId);
+        // 删除es索引库数据
+        esManagerService.delDataBySpuId(message);
     }
 }
